@@ -1,124 +1,128 @@
+import { FormGroup, FormLabel, FormControl, FormSelect, FormCheck, Button } from "react-bootstrap";
+import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
+import FormCheckLabel from "react-bootstrap/esm/FormCheckLabel";
+
 export default function AssignmentEditor() {
     return (
         <div id="wd-assignments-editor">
-            <label htmlFor="wd-name">Assignment Name</label>
-            <input id="wd-name" value="A1 - ENV + HTML" /><br /><br />
-            <textarea id="wd-description" cols={45} rows={10}>
-                The assignment is available online Submit a link to the landing page of your Web application running on Netlify. The landing page should include the following: Your full name and section Links to each of the lab assignments Link to the Kanbas application Links to all relevant source code repositories The Kanbas application should include a link to navigate back to the landing page
-            </textarea>
-            <br />
-            <table>
-                <br />
-                <tr>
-                    <td align="right" valign="top">
-                        <label htmlFor="wd-points">Points</label>
-                    </td>
-                    <td>
-                        <input id="wd-points" value={100} />
-                    </td>
-                </tr>
-                <br />
-                <tr>
-                    <td>
-                        <label htmlFor="wd-select-one-group"> Assignment Group: </label>
-                    </td>
-                    <td>
-                        <select id="wd-group">
-                            <option value="ASSIGNMENTS">ASSIGNMENTS</option>
-                            <option value="OTHER">OTHER</option>
-                        </select>
-                    </td>
-                </tr>
-                <br />
-                <tr>
-                    <td>
-                        <label htmlFor="wd-select-one-display-grade-as"> Display Grade as: </label>
-                    </td>
-                    <td>
-                        <select id="wd-display-grade-as">
-                            <option value="PERCENTAGE">Percentage</option>
-                            <option value="POINTS">Points</option>
-                        </select>
-                    </td>
-                </tr>
-                <br />
-                <tr>
-                    <td>
-                        <label htmlFor="wd-select-one-submission-type"> Submission type: </label>
-                    </td>
-                    <td>
-                        <select id="wd-submission-type">
-                            <option value="ONLINE">Online</option>
-                            <option value="INPERSON">In Person</option>
-                        </select>
-                    </td>
-                </tr>
-                <br />
-                <tr>
-                    <td>
-                    </td>
-                    <td>
-                        <label>Online Entry Options:</label><br />
-
-                        <input type="checkbox" name="check-online" id="wd-text-entry" />
-                        <label htmlFor="wd-text-entry">Text Entry</label><br />
-
-                        <input type="checkbox" name="check-online" id="wd-website-url" />
-                        <label htmlFor="wd-website-url">Website URL</label><br />
-
-                        <input type="checkbox" name="check-online" id="wd-media-recordings" />
-                        <label htmlFor="wd-media-recordings">Media Recordings</label><br />
-
-                        <input type="checkbox" name="check-online" id="wd-student-annotation" />
-                        <label htmlFor="wd-student-annotation">Student Annotation</label><br />
-
-                        <input type="checkbox" name="check-online" id="wd-file-upload" />
-                        <label htmlFor="wd-file-upload">File Uploads</label>
-                    </td>
-                </tr>
-                <br />
-                <tr>
-                    <td valign="top" align="right">
-                        Assign
-                    </td>
-                    <td>
-                        Assign to<br></br>
-                        <input type="text"
-                            value="Everyone"
-                            title="The last name"
-                            id="wd-assign-to" />
-                    </td>
-                </tr>
-                <br />
-                <tr>
-                    <td>
-                    </td>
-                    <td>
-                        Due<br></br>
-                        <input type="date"
-                            value="2024-05-13"
-                            id="wd-due-date" /><br />
-                    </td>
-                </tr>
-                <br />
-                <tr>
-                    <td></td>
-                    <td>
-                        <td>
-                            Available from<br></br>
-                            <input type="date"
-                                value="2024-05-06"
-                                id="wd-available-from" /><br />
-                        </td>
-                        <td>
-                            Until <br></br>
-                            <input type="date"
-                                value="2024-05-20"
-                                id="wd-available-until" /><br />
-                        </td>
-                    </td>
-                </tr>
-            </table>
+            <FormGroup className="mb-3" id="wd-name">
+                <FormLabel>Assignment Name</FormLabel>
+                <FormControl id="wd-name" defaultValue="A1" />
+            </FormGroup>
+            <FormGroup className="mb-3" id="wd-description">
+                <FormControl id="wd-description" as="textarea" rows={3} defaultValue="The assignment is available online Submit a link to the landing page of your Web application running on Netlify. The landing page should include the following: Your full name and section Links to each of the lab assignments Link to the Kanbas application Links to all relevant source code repositories The Kanbas application should include a link to navigate back to the landing page" />
+            </FormGroup>
+            <FormGroup className="row mb-3 align-items-center" id="wd-points">
+                <FormLabel className="col-sm-4" align="right"> Points</FormLabel>
+                <div className="col-sm-4">
+                    <FormControl id="wd-points" type="number" defaultValue={100} />
+                </div>
+            </FormGroup>
+            <FormGroup className="row mb-3 align-items-center" id="wd-group">
+                <FormLabel className="col-sm-4" align="right"> Assignment Group</FormLabel>
+                <div className="col-sm-4">
+                    <FormSelect>
+                        <option value="ASSIGNMENTS">ASSIGNMENTS</option>
+                        <option value="OTHER">OTHER</option>
+                    </FormSelect>
+                </div>
+            </FormGroup>
+            <FormGroup className="row mb-3 align-items-center" id="wd-display-grade-as">
+                <FormLabel className="col-sm-4" align="right"> Display Grade As</FormLabel>
+                <div className="col-sm-4">
+                    <FormSelect>
+                        <option value="PERCENTAGE">Percentage</option>
+                        <option value="POINTS">Points</option>
+                    </FormSelect>
+                </div>
+            </FormGroup>
+            <FormGroup className="row mb-3 align-items-center" id="wd-submission-type">
+                <FormLabel className="col-sm-4" align="right"> Submission type</FormLabel>
+                <div className="col-sm-4">
+                    <div className="border-1 border rounded-2 p-2">
+                        <div className="mb-3">
+                            <FormSelect>
+                                <option value="ONLINE">Online</option>
+                                <option value="INPERSON">In Person</option>
+                            </FormSelect>
+                            <FormGroup className="mb-3 pt-2">
+                                <FormLabel className="fw-bold">
+                                    Online Entry Options
+                                </FormLabel>
+                                <FormCheck className="mb-3">
+                                    <FormCheckLabel id="wd-text-entry">
+                                        Text Entry
+                                    </FormCheckLabel>
+                                    <FormCheckInput id="wd-text-entry" />
+                                </FormCheck>
+                                <FormCheck className="mb-3">
+                                    <FormCheckLabel id="wd-website-url">
+                                        Website URL
+                                    </FormCheckLabel>
+                                    <FormCheckInput id="wd-website-url" />
+                                </FormCheck>
+                                <FormCheck className="mb-3">
+                                    <FormCheckLabel id="wd-media-recordings">
+                                        Media Recordings
+                                    </FormCheckLabel>
+                                    <FormCheckInput id="wd-media-recordings" />
+                                </FormCheck>
+                                <FormCheck className="mb-3">
+                                    <FormCheckLabel id="wd-student-annotation">
+                                        Student Annotation
+                                    </FormCheckLabel>
+                                    <FormCheckInput id="wd-student-annotation" />
+                                </FormCheck>
+                                <FormCheck className="mb-3">
+                                    <FormCheckLabel id="wd-file-uploads">
+                                        File Uploads
+                                    </FormCheckLabel>
+                                    <FormCheckInput id="wd-file-uploads" />
+                                </FormCheck>
+                            </FormGroup>
+                        </div>
+                    </div>
+                </div>
+            </FormGroup>
+            <FormGroup className="row mb-3 align-items-center">
+                <FormLabel className="col-sm-4" align="right"> Assign</FormLabel>
+                <div className="col-sm-4">
+                    <div className="border-1 border rounded-2 p-2">
+                        <div className="mb-3">
+                            <FormGroup className="mb-3 fw-bold" id="wd-assign-to">
+                                <FormLabel>Assign to</FormLabel>
+                                <FormControl id="wd-assign-to" defaultValue="Everyone" />
+                            </FormGroup>
+                            <FormGroup className="mb-3 fw-bold" id="wd-due-date">
+                                <FormLabel>Due</FormLabel>
+                                <FormControl id="wd-due-date" type="date" defaultValue="2024-05-13" />
+                            </FormGroup>
+                            <div className="row">
+                                <div className="col-sm-6 fw-bold">
+                                    <FormGroup id="wd-available-from">
+                                        <FormLabel>Available from</FormLabel>
+                                        <FormControl id="wd-available-from" type="date" defaultValue="2024-05-06" />
+                                    </FormGroup>
+                                </div>
+                                <div className="col-sm-6 fw-bold">
+                                    <FormGroup id="wd-available-until">
+                                        <FormLabel>Until</FormLabel>
+                                        <FormControl id="wd-available-until" type="date" defaultValue="2024-05-20" />
+                                    </FormGroup>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </FormGroup>
+            <div className="text-end">
+                <Button variant="secondary" className="me-1">
+                    Cancel
+                </Button>
+                <Button variant="danger" className="me-1">
+                    Save
+                </Button>
+            </div>
         </div>
     );
 }
