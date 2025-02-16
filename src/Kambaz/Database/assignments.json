@@ -1,0 +1,92 @@
+[
+    {
+        "_id": "A101",
+        "title": "Propulsion Assignment",
+        "course": "RS101",
+        "description": "Analyze the fundamentals of propulsion systems and their efficiency.",
+        "availableFrom": "2024-05-06",
+        "availableUntil": "2024-05-13",
+        "due": "2024-05-13",
+        "points": 100
+    },
+    {
+        "_id": "A102",
+        "title": "Combustion Analysis",
+        "course": "RS101",
+        "description": "Evaluate combustion processes in different engine types.",
+        "availableFrom": "2024-05-10",
+        "availableUntil": "2024-05-17",
+        "due": "2024-05-17",
+        "points": 90
+    },
+    {
+        "_id": "A103",
+        "title": "Nozzle Design Project",
+        "course": "RS101",
+        "description": "Design a rocket nozzle for optimized thrust and efficiency.",
+        "availableFrom": "2024-05-15",
+        "availableUntil": "2024-05-22",
+        "due": "2024-05-22",
+        "points": 120
+    },
+    {
+        "_id": "A201",
+        "title": "Aerodynamics Quiz",
+        "course": "RS102",
+        "description": "Test on fundamental principles of aerodynamics and lift generation.",
+        "availableFrom": "2024-05-07",
+        "availableUntil": "2024-05-14",
+        "due": "2024-05-14",
+        "points": 50
+    },
+    {
+        "_id": "A202",
+        "title": "Flow Analysis",
+        "course": "RS102",
+        "description": "Perform a computational fluid dynamics (CFD) analysis on airflow over a wing.",
+        "availableFrom": "2024-05-12",
+        "availableUntil": "2024-05-19",
+        "due": "2024-05-19",
+        "points": 100
+    },
+    {
+        "_id": "A203",
+        "title": "Heating Analysis",
+        "course": "RS102",
+        "description": "Analyze heat transfer in aerospace structures.",
+        "availableFrom": "2024-05-18",
+        "availableUntil": "2024-05-25",
+        "due": "2024-05-25",
+        "points": 110
+    },
+    {
+        "_id": "A301",
+        "title": "Structural Design Task",
+        "course": "RS103",
+        "description": "Design a lightweight yet strong structure for aerospace applications.",
+        "availableFrom": "2024-05-09",
+        "availableUntil": "2024-05-16",
+        "due": "2024-05-16",
+        "points": 95
+    },
+    {
+        "_id": "A302",
+        "title": "Orbital Calculations",
+        "course": "RS103",
+        "description": "Perform orbital mechanics calculations for a satellite in low Earth orbit.",
+        "availableFrom": "2024-05-14",
+        "availableUntil": "2024-05-21",
+        "due": "2024-05-21",
+        "points": 105
+    },
+    {
+        "_id": "A303",
+        "title": "Systems Engineering Exam",
+        "course": "RS103",
+        "description": "Comprehensive exam on systems engineering principles.",
+        "availableFrom": "2024-05-20",
+        "availableUntil": "2024-05-27",
+        "due": "2024-05-27",
+        "points": 150
+    }
+]

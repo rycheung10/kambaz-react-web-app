@@ -4,8 +4,11 @@ import AssignmentsControls from "./AssignmentsControls";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import HomeworkControlButtons from "./HomeworkControlButtons";
 import { MdOutlineAssignment } from "react-icons/md";
+import { useParams } from "react-router";
+import { assignments } from "../../Database";
 
 export default function Assignments() {
+  const { cid } = useParams();
   return (
     <div>
       <AssignmentsControls /><br />
@@ -18,69 +21,31 @@ export default function Assignments() {
             </div>
             <AssignmentControlButtons />
           </div>
-          <ListGroup className="wd-assignment-list rounded-0">
-            <ListGroup.Item className="wd-assignment-list-item p-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex align-items-center">
-                <BsGripVertical className="me-3 fs-3" />
-                <MdOutlineAssignment className="me-4 fs-3" />
-              </div>
-              <div className="flex-grow-1">
-                <a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link d-block">
-                  A1
-                </a>
-                <div className="fs-6">
-                  <span className="text-danger">Multiple Modules</span> |{" "}
-                  <strong>Not available until</strong> May 6 at 12:00am |<br />
-                  <strong>Due</strong> May 13 at 11:59pm | 100 pts
-                </div>
-              </div>
-              <div className="d-flex align-items-center">
-                <HomeworkControlButtons />
-              </div>
-            </ListGroup.Item>
-          </ListGroup>
-          <ListGroup className="wd-assignment-list rounded-0">
-            <ListGroup.Item className="wd-assignment-list-item p-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex align-items-center">
-                <BsGripVertical className="me-3 fs-3" />
-                <MdOutlineAssignment className="me-4 fs-3" />
-              </div>
-              <div className="flex-grow-1">
-                <a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link d-block">
-                  A2
-                </a>
-                <div className="fs-6">
-                  <span className="text-danger">Multiple Modules</span> |{" "}
-                  <strong>Not available until</strong> May 13 at 12:00am |<br />
-                  <strong>Due</strong> May 20 at 11:59pm | 100 pts
-                </div>
-              </div>
-              <div className="d-flex align-items-center">
-                <HomeworkControlButtons />
-              </div>
-            </ListGroup.Item>
-          </ListGroup>
-          <ListGroup className="wd-assignment-list rounded-0">
-            <ListGroup.Item className="wd-assignment-list-item p-3 d-flex justify-content-between align-items-center">
-              <div className="d-flex align-items-center">
-                <BsGripVertical className="me-3 fs-3" />
-                <MdOutlineAssignment className="me-4 fs-3" />
-              </div>
-              <div className="flex-grow-1">
-                <a href="#/Kambaz/Courses/1234/Assignments/123" className="wd-assignment-link d-block">
-                  A3
-                </a>
-                <div className="fs-6">
-                  <span className="text-danger">Multiple Modules</span> |{" "}
-                  <strong>Not available until</strong> May 20 at 12:00am |<br />
-                  <strong>Due</strong> May 27 at 11:59pm | 100 pts
-                </div>
-              </div>
-              <div className="d-flex align-items-center">
-                <HomeworkControlButtons />
-              </div>
-            </ListGroup.Item>
-          </ListGroup>
+          {assignments
+            .filter((assignment) => assignment.course === cid)
+            .map((assignment) => (
+              <ListGroup key={assignment._id} className="wd-assignment-list rounded-0">
+                <ListGroup.Item className="wd-assignment-list-item p-3 d-flex justify-content-between align-items-center">
+                  <div className="d-flex align-items-center">
+                    <BsGripVertical className="me-3 fs-3" />
+                    <MdOutlineAssignment className="me-4 fs-3" />
+                  </div>
+                  <div className="flex-grow-1">
+                    <a href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`} className="wd-assignment-link d-block">
+                      {assignment.title}
+                    </a>
+                    <div className="fs-6">
+                      <span className="text-danger">Multiple Modules</span> |{" "}
+                      <strong>Not available until</strong> {new Date(assignment.availableFrom).toDateString()} |<br />
+                      <strong>Due</strong> {new Date(assignment.due).toDateString()} | {assignment.points} pts
+                    </div>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <HomeworkControlButtons />
+                  </div>
+                </ListGroup.Item>
+              </ListGroup>
+            ))}
         </ListGroup.Item>
       </ListGroup>
     </div>
