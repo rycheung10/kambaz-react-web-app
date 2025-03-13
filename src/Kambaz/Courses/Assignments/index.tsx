@@ -6,6 +6,7 @@ import HomeworkControlButtons from "./HomeworkControlButtons";
 import { MdOutlineAssignment } from "react-icons/md";
 import { useParams } from "react-router";
 import { assignments } from "../../Database";
+import { FaTrash } from "react-icons/fa6";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -41,6 +42,7 @@ export default function Assignments() {
                     </div>
                   </div>
                   <div className="d-flex align-items-center">
+                    <FaTrash className="text-danger me-2 mb-1" />
                     <HomeworkControlButtons />
                   </div>
                 </ListGroup.Item>
