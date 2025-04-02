@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCurrentUser } from "./reducer";
 import FormControl from "react-bootstrap/esm/FormControl";
 import Button from "react-bootstrap/esm/Button";
@@ -9,14 +9,18 @@ export default function Profile() {
     const [profile, setProfile] = useState<any>({});
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const updateProfile = async () => {
         const updatedProfile = await client.updateUser(profile);
         dispatch(setCurrentUser(updatedProfile));
     };
-    const fetchProfile = () => {
-        if (!currentUser) return navigate("/Kambaz/Account/Signin");
-        setProfile(currentUser);
+    const fetchProfile = async () => {
+        try {
+            const currentUser = await client.profile();
+            setProfile(currentUser);
+            dispatch(setCurrentUser(currentUser));
+        } catch (err) {
+            navigate("/Kambaz/Account/Signin");
+        }
     };
     const signout = async () => {
         await client.signout();
