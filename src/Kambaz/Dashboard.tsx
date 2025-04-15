@@ -7,10 +7,12 @@ import { unEnroll, enroll } from "./reducer";
 
 export default function Dashboard(
     { courses, course, setCourse, addNewCourse,
-        deleteCourse, updateCourse }: {
+        deleteCourse, updateCourse, enrolling, setEnrolling, updateEnrollment }: {
             courses: any[]; course: any; setCourse: (course: any) => void;
             addNewCourse: () => void; deleteCourse: (course: any) => void;
-            updateCourse: () => void;
+            updateCourse: () => void; enrolling: boolean;
+            setEnrolling: (enrolling: boolean) => void;
+            updateEnrollment: (courseId: string, enrolled: boolean) => void
         }) {
 
     const dispatch = useDispatch();
@@ -37,7 +39,10 @@ export default function Dashboard(
 
     return (
         <div id="wd-dashboard">
-            <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+            <h1 id="wd-dashboard-title">Dashboard
+                <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+                    {enrolling ? "My Courses" : "All Courses"}
+                </button></h1> <hr />
             {currentUser.role === "FACULTY" && (
                 <div>
                     <h5>
