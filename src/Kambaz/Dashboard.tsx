@@ -96,7 +96,10 @@ export default function Dashboard(
                                         )}
                                         {currentUser.role === "STUDENT" && (
                                             <Button className={`btn-${checkEnrollmentStatus(course._id) ? "danger" : "success"} btn float-end`}
-                                                onClick={(e) => { e.preventDefault(); toggleEnrollment(course); }}>
+                                                onClick={(event) => {
+                                                    event.preventDefault();
+                                                    updateEnrollment(course._id, !course.enrolled);
+                                                }}>
                                                 {checkEnrollmentStatus(course._id) ? "Unenroll" : "Enroll"}
                                             </Button>
                                         )}
