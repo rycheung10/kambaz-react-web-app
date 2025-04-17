@@ -6,6 +6,7 @@ import Home from "./Home";
 import Modules from "./Modules";
 import CourseNavigation from "./Navigation";
 import PeopleTable from "./People/Table";
+import Pazza from "./Pazza";
 export default function Courses({ courses }: { courses: any[] }) {
     const { cid } = useParams();
     const course = courses.find((course) => course._id === cid);
@@ -25,6 +26,7 @@ export default function Courses({ courses }: { courses: any[] }) {
                         <Route path="/" element={<Navigate to="Home" />} />
                         <Route path="Home" element={<Home />} />
                         <Route path="Modules" element={<Modules />} />
+                        <Route path="Pazza/*" element={<Pazza />} />
                         <Route path="Assignments" element={<Assignments />} />
                         <Route path="Assignments/:aid" element={<AssignmentEditor />} />
                         <Route path="People" element={<PeopleTable />} />

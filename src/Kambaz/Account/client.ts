@@ -76,3 +76,8 @@ export const unenrollFromCourse = async (userId: string, courseId: string) => {
     const response = await axiosWithCredentials.delete(`${USERS_API}/${userId}/courses/${courseId}`);
     return response.data;
 };
+
+export const markPostAsRead = async (postId: string) => {
+    const response = await axiosWithCredentials.post(`/api/users/current/read/${postId}`);
+    return response.data;
+};
