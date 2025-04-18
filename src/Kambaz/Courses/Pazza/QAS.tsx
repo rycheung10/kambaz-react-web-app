@@ -8,6 +8,7 @@ import { createPost, findPostsByCourse } from "./client";
 import { findAllUsers } from "../../Account/client";
 import { useParams } from "react-router-dom";
 import { markPostAsRead } from "../../Account/client";
+import { useSelector } from "react-redux";
 
 
 export default function QAS() {
@@ -18,6 +19,9 @@ export default function QAS() {
 
     const [posts, setPosts] = useState<any[]>([]);
     const [allUsers, setAllUsers] = useState<any[]>([]);
+
+    const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
+
 
     const handleNewPost = (post: any) => {
         const coursePost = { ...post, course: cid };
@@ -44,6 +48,7 @@ export default function QAS() {
             <div style={{ display: "flex" }}>
                 <Sidebar
                     posts={posts}
+                    selectedPost={selectedPost}
                     onSelect={(post) => {
                         setSelectedPost(post);
                         markPostAsRead(post._id);
@@ -60,7 +65,15 @@ export default function QAS() {
                     {showNewPost ? (
                         <NewPost onPost={handleNewPost} onCancel={() => setShowNewPost(false)} />
                     ) : (
-                        <PostScreen post={selectedPost} posts={posts} users={allUsers} />
+                        <PostScreen
+                            post={selectedPost}
+                            posts={posts}
+                            setPosts={setPosts}
+                            setSelectedPost={setSelectedPost}
+                            users={allUsers}
+                            currentUser={currentUser}
+                        />
+
                     )}
                 </div>
             </div>

@@ -17,3 +17,12 @@ export const findPostsByCourse = async (cid: string) => {
     return response.data;
 };
 
+export const updatePost = async (post: any) => {
+    const response = await axiosWithCredentials.put(`${PAZZA_API}/posts/${post._id}`, post);
+    return response.data;
+};
+
+export const deletePost = async (postId: string) => {
+    const response = await axiosWithCredentials.delete(`${PAZZA_API}/posts/${postId}`);
+    return response.data;
+};
