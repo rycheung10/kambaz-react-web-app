@@ -1,13 +1,13 @@
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-
+import { useParams, Link } from "react-router-dom";
 
 export default function PazzaNav() {
     const { cid } = useParams();
-
     const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
     const courseId = cid;
 
+    // Check if the user is an instructor to conditionally show the Manage Class link
+    const isInstructor = ["FACULTY", "INSTRUCTOR"].includes(currentUser?.role?.toUpperCase());
 
     return (
         <div style={{
@@ -23,10 +23,42 @@ export default function PazzaNav() {
             alignItems: "center",
             boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
         }}>
-
             <div style={{ fontWeight: "bold", fontSize: "20px" }}>Pazza</div>
             <div style={{ flex: 1, textAlign: "center" }}>
                 Course: <span style={{ fontWeight: "bold" }}>{courseId}</span>
+            </div>
+            <div style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+                {/* Link to Manage Class Screen (MCS), only visible to instructors */}
+                {isInstructor && (
+                    <Link 
+                        to={`/Kambaz/Courses/${courseId}/Pazza/manage-class`} 
+                        style={{
+                            color: "white", 
+                            textDecoration: "none", 
+                            padding: "8px 12px", 
+                            borderRadius: "4px", 
+                            backgroundColor: "#4CAF50",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        Manage Class
+                    </Link>
+                )}
+
+                {/* Link to QAS */}
+                <Link 
+                    to={`/Kambaz/Courses/${courseId}/Pazza/qas`} 
+                    style={{
+                        color: "white", 
+                        textDecoration: "none", 
+                        padding: "8px 12px", 
+                        borderRadius: "4px", 
+                        backgroundColor: "#2196F3",  // Different background for differentiation
+                        fontWeight: "bold",
+                    }}
+                >
+                    Back to QAS
+                </Link>
             </div>
             <div>
                 Logged in as: <strong>{currentUser?.firstName || "Guest"}</strong>
