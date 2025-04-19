@@ -3,6 +3,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { updatePost, deletePost } from "./client";
 import Answers from "./Answers";
+import FUD from "./FUD";
 export default function PostScreen({
     post,
     posts,
@@ -173,6 +174,14 @@ export default function PostScreen({
              setPost={setSelectedPost}
              />)
         }
+        
+        <FUD 
+        post={post}
+        posts={posts}
+        setPosts={setPosts}
+        setSelectedPost={setSelectedPost}
+        currentUser={currentUser}
+        />
         </div>
     );
 }
