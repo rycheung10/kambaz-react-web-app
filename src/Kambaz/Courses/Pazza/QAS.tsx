@@ -76,7 +76,7 @@ export default function QAS() {
 
                 <div style={{ flex: 1 }}>
                     {showNewPost ? (
-                        <NewPost onPost={handleNewPost} onCancel={() => setShowNewPost(false) } availableFolders={folders} />
+                        <NewPost currentUser={currentUser} onPost={handleNewPost} onCancel={() => setShowNewPost(false) } availableFolders={folders} />
                     ) : (
                         <PostScreen
                             post={selectedPost}
