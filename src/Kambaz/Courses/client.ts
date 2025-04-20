@@ -33,3 +33,32 @@ export const createCourse = async (course: any) => {
     const { data } = await axiosWithCredentials.post(COURSES_API, course);
     return data;
 };
+
+export const addFolderToCourse = async (courseId: string, name: string) => {
+    const response = await axiosWithCredentials.post(
+      `${REMOTE_SERVER}/api/courses/${courseId}/folders`,
+      { name }
+    );
+    return response.data;
+  };
+  
+  export const removeFolderFromCourse = async (courseId: string, name: string) => {
+    const response = await axiosWithCredentials.delete(
+      `${REMOTE_SERVER}/api/courses/${courseId}/folders`,
+      { data: { name } }
+    );
+    return response.data;
+  };
+  
+  export const renameFolderInCourse = async (
+    courseId: string,
+    oldName: string,
+    newName: string
+  ) => {
+    const response = await axiosWithCredentials.put(
+      `${REMOTE_SERVER}/api/courses/${courseId}/folders`,
+      { oldName, newName }
+    );
+    return response.data;
+  };
+  

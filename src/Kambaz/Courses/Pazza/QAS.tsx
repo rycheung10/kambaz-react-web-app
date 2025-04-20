@@ -9,7 +9,11 @@ import { findAllUsers } from "../../Account/client";
 import { useParams } from "react-router-dom";
 import { markPostAsRead } from "../../Account/client";
 import { useSelector } from "react-redux";
+import axios from "axios";
+const axiosWithCredentials = axios.create({ withCredentials: true });
 
+const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
+const COURSES_API = `${REMOTE_SERVER}/api/courses`;
 
 export default function QAS() {
     const { cid } = useParams();
@@ -19,7 +23,7 @@ export default function QAS() {
 
     const [posts, setPosts] = useState<any[]>([]);
     const [allUsers, setAllUsers] = useState<any[]>([]);
-
+    const [folders, setFolders] = useState<string[]>([]);
     const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
 
 
@@ -31,10 +35,19 @@ export default function QAS() {
             setShowNewPost(false);
         });
     };
-
-
+    const fetchCourse = async () => {
+        try {
+          console.log("Fetching course:", cid);
+          const { data } = await axiosWithCredentials.get(`${COURSES_API}/${cid}`);
+          setFolders(data.folders || []); // fallback in case folders is undefined
+        } catch (error) {
+          console.error("Failed to fetch course:", error);
+        }
+      };
+      
     useEffect(() => {
         if (cid) {
+            fetchCourse();
             findPostsByCourse(cid).then(setPosts);
             findAllUsers().then(setAllUsers);
         }
@@ -44,7 +57,7 @@ export default function QAS() {
     return (
         <div>
             <Navigation />
-            <Filters selected={selectedFolder} onSelect={setSelectedFolder} />
+            <Filters folders={folders} selected={selectedFolder} onSelect={setSelectedFolder} />
             <div style={{ display: "flex" }}>
                 <Sidebar
                     posts={posts}
@@ -63,7 +76,7 @@ export default function QAS() {
 
                 <div style={{ flex: 1 }}>
                     {showNewPost ? (
-                        <NewPost onPost={handleNewPost} onCancel={() => setShowNewPost(false)} />
+                        <NewPost onPost={handleNewPost} onCancel={() => setShowNewPost(false) } availableFolders={folders} />
                     ) : (
                         <PostScreen
                             post={selectedPost}

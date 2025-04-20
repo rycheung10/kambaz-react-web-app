@@ -1,15 +1,17 @@
 //import { useState } from "react";
 
 export default function Filters({
+    folders,
     selected,
     onSelect
 }: {
+    folders: string[];
     selected: string;
     onSelect: (folder: string) => void;
 }) {
 
     // const [selected, setSelected] = useState("hw1");
-    const folders = ["hw1", "hw2", "office_hours", "exam", "project"];
+   // const folders = ["hw1", "hw2", "office_hours", "exam", "project"];
 
     return (
         <div style={{

@@ -3,13 +3,14 @@ import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 import { useParams } from "react-router-dom";
 
-export default function NewPost({ onPost, onCancel }: { onPost: (post: any) => void, onCancel: () => void }) {
+export default function NewPost({ onPost, onCancel, availableFolders }:
+     { onPost: (post: any) => void, onCancel: () => void; availableFolders: string[] }) {
     const { cid } = useParams();
 
     const [type, setType] = useState("question");
     const [summary, setSummary] = useState("");
     const [details, setDetails] = useState("");
-    const availableFolders = ["hw1", "hw2", "project", "exam", "office_hours"];
+  //  const availableFolders = ["hw1", "hw2", "project", "exam", "office_hours"];
     const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
 
     const handleSubmit = () => {

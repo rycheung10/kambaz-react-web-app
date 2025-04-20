@@ -2,7 +2,7 @@ import axios from "axios";
 const axiosWithCredentials = axios.create({ withCredentials: true });
 export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export const PAZZA_API = `${REMOTE_SERVER}/api/pazza`;
-
+const COURSES_API = `${REMOTE_SERVER}/api/courses`;
 export const findAllPosts = async () => {
     const response = await axiosWithCredentials.get(`${PAZZA_API}/posts`);
     return response.data;
@@ -26,3 +26,8 @@ export const deletePost = async (postId: string) => {
     const response = await axiosWithCredentials.delete(`${PAZZA_API}/posts/${postId}`);
     return response.data;
 };
+
+export const fetchCourseById = async (courseId: string) => {
+    const response = await axiosWithCredentials.get(`${COURSES_API}/${courseId}`);
+    return response.data;
+  };
