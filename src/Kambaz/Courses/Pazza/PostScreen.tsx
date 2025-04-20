@@ -4,6 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import { updatePost, deletePost } from "./client";
 import Answers from "./Answers";
 import FUD from "./FUD";
+
 export default function PostScreen({
     post,
     posts,
@@ -20,12 +21,14 @@ export default function PostScreen({
     currentUser: any;
 }) {
     if (!post) {
+        // Class at a Glance statistics
         const totalPosts = posts.length;
-        const unreadPosts = posts.filter(p => !p.read).length;
-        const unansweredPosts = posts.filter(p => !p.answered).length;
-        const instructorResponses = posts.filter(p => p.role === "Instructor").length;
-        const studentResponses = posts.filter(p => p.role === "Student").length;
+        const unreadPosts = posts.filter(p => !p.read).length;  // assuming there is a `read` field
+        const unansweredPosts = posts.filter(p => !(p.instructorAnswers || p.studentAnswers)).length;
+        const instructorResponses = posts.filter(p => p.instructorAnswers).length;
+        const studentResponses = posts.filter(p => p.studentAnswers).length;
         const studentCount = users.filter(u => u.role === "STUDENT").length;
+
         return (
             <div style={{ padding: "20px" }}>
                 <h2>📊 Class at a Glance</h2>
@@ -93,8 +96,7 @@ export default function PostScreen({
         setPosts(posts.map(p => (p._id === post._id ? result : p)));  // Update the posts array with the result
         setSelectedPost(result);  // Update the selected post in your state
     };
-    
-    
+
     const handleDelete = async (post: any) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this post?");
         if (!confirmDelete) return;
@@ -165,23 +167,22 @@ export default function PostScreen({
             )}
 
             {post.type === "question" && (<Answers
-             post={post}
-             newAnswer={newAnswer}
-             setNewAnswer={setNewAnswer}
-             handleSubmitAnswer={handleSubmitAnswer}
-             handleAnswerDelete={handleAnswerDelete} 
-             currentUser={currentUser}
-             setPost={setSelectedPost}
-             />)
-        }
-        
-        <FUD 
-        post={post}
-        posts={posts}
-        setPosts={setPosts}
-        setSelectedPost={setSelectedPost}
-        currentUser={currentUser}
-        />
+                post={post}
+                newAnswer={newAnswer}
+                setNewAnswer={setNewAnswer}
+                handleSubmitAnswer={handleSubmitAnswer}
+                handleAnswerDelete={handleAnswerDelete} 
+                currentUser={currentUser}
+                setPost={setSelectedPost}
+            />)}
+
+            <FUD 
+                post={post}
+                posts={posts}
+                setPosts={setPosts}
+                setSelectedPost={setSelectedPost}
+                currentUser={currentUser}
+            />
         </div>
     );
 }

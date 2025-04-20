@@ -26,6 +26,7 @@ export default function QAS() {
     const [folders, setFolders] = useState<string[]>([]);
     const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
 
+    const [sidebarVisible, setSidebarVisible] = useState(true); // State to toggle sidebar visibility
 
     const handleNewPost = (post: any) => {
         const coursePost = { ...post, course: cid };
@@ -35,16 +36,17 @@ export default function QAS() {
             setShowNewPost(false);
         });
     };
+
     const fetchCourse = async () => {
         try {
-          console.log("Fetching course:", cid);
-          const { data } = await axiosWithCredentials.get(`${COURSES_API}/${cid}`);
-          setFolders(data.folders || []); // fallback in case folders is undefined
+            console.log("Fetching course:", cid);
+            const { data } = await axiosWithCredentials.get(`${COURSES_API}/${cid}`);
+            setFolders(data.folders || []); // fallback in case folders is undefined
         } catch (error) {
-          console.error("Failed to fetch course:", error);
+            console.error("Failed to fetch course:", error);
         }
-      };
-      
+    };
+
     useEffect(() => {
         if (cid) {
             fetchCourse();
@@ -53,30 +55,53 @@ export default function QAS() {
         }
     }, [cid]);
 
-
     return (
         <div>
             <Navigation />
             <Filters folders={folders} selected={selectedFolder} onSelect={setSelectedFolder} />
+
+            {/* TLOPS Button to toggle sidebar */}
+            <button
+                onClick={() => setSidebarVisible(!sidebarVisible)}
+                style={{
+                    zIndex: 1000,  
+                    backgroundColor: "transparent",
+                    border: "none",
+                    fontSize: "24px",
+                    cursor: "pointer",
+                    padding: "10px", 
+                    color: "#007bff",  
+                    fontWeight: "bold",
+                    display: "flex",  
+                    alignItems: "center", 
+                    justifyContent: "center",
+                }}
+            >
+                {sidebarVisible ? "◁" : "▷"}
+            </button>
+
             <div style={{ display: "flex" }}>
-                <Sidebar
-                    posts={posts}
-                    selectedPost={selectedPost}
-                    onSelect={(post) => {
-                        setSelectedPost(post);
-                        markPostAsRead(post._id);
-                    }}
-                    onNewPost={() => {
-                        setShowNewPost(true);
-                        setSelectedPost(null);
-                    }}
-                    selectedFolder={selectedFolder}
-                    onClearFilter={() => setSelectedFolder("all")}
-                />
+                {/* Sidebar */}
+                {sidebarVisible && (
+                    <Sidebar
+                        posts={posts}
+                        selectedPost={selectedPost}
+                        onSelect={(post) => {
+                            setSelectedPost(post);
+                            markPostAsRead(post._id);
+                        }}
+                        onNewPost={() => {
+                            setShowNewPost(true);
+                            setSelectedPost(null);
+                        }}
+                        selectedFolder={selectedFolder}
+                        onClearFilter={() => setSelectedFolder("all")}
+                    />
+                )}
 
                 <div style={{ flex: 1 }}>
                     {showNewPost ? (
-                        <NewPost currentUser={currentUser} onPost={handleNewPost} onCancel={() => setShowNewPost(false) } availableFolders={folders} />
+                        <NewPost currentUser={currentUser} onPost={handleNewPost} onCancel={() => setShowNewPost(false)} availableFolders={folders} />
                     ) : (
                         <PostScreen
                             post={selectedPost}
@@ -86,7 +111,6 @@ export default function QAS() {
                             users={allUsers}
                             currentUser={currentUser}
                         />
-
                     )}
                 </div>
             </div>
