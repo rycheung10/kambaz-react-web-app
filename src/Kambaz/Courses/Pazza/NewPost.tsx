@@ -7,26 +7,38 @@ export default function NewPost({
   currentUser,
   onPost,
   onCancel,
-  availableFolders
+  availableFolders,
+  courseUsers,
 }: {
   currentUser: any;
   onPost: (post: any) => void;
   onCancel: () => void;
   availableFolders: string[];
+  courseUsers: any[];
 }) {
   const { cid } = useParams();
   const [type, setType] = useState("question");
   const [summary, setSummary] = useState("");
   const [details, setDetails] = useState("");
   const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
+  const [visibility, setVisibility] = useState<"entire" | "custom">("entire");
+  const [selectedViewers, setSelectedViewers] = useState<string[]>([]);
+
   const MAX_SUMMARY_LENGTH = 100;
 
   const handleSubmit = () => {
     const plainText = details.replace(/<[^>]+>/g, '').trim();
+
     if (!summary.trim() || summary.length > MAX_SUMMARY_LENGTH || plainText === "") {
       alert("Summary (max 100 characters) and details are required.");
       return;
     }
+
+    if (visibility === "custom" && selectedViewers.length === 0) {
+      alert("You must select at least one user for a custom visibility post.");
+      return;
+    }
+
     const fullName = `${currentUser?.firstName || ""} ${currentUser?.lastName || ""}`.trim().toLowerCase();
 
     const now = new Date();
@@ -49,9 +61,19 @@ export default function NewPost({
       folders: selectedFolders,
       course: cid,
       resolved: false,
+      visibility: visibility === "entire" ? "entire" : selectedViewers, // new field
     };
 
     onPost(newPost);
+  };
+
+  const instructorList = courseUsers.filter(u => u.role === "instructor");
+  const otherUsers = courseUsers.filter(u => u.role !== "instructor");
+
+  const toggleViewer = (id: string) => {
+    setSelectedViewers(prev =>
+      prev.includes(id) ? prev.filter(uid => uid !== id) : [...prev, id]
+    );
   };
 
   return (
@@ -75,13 +97,13 @@ export default function NewPost({
                 type="checkbox"
                 value={folder}
                 checked={selectedFolders.includes(folder)}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSelectedFolders([...selectedFolders, folder]);
-                  } else {
-                    setSelectedFolders(selectedFolders.filter((f) => f !== folder));
-                  }
-                }}
+                onChange={(e) =>
+                  setSelectedFolders(
+                    e.target.checked
+                      ? [...selectedFolders, folder]
+                      : selectedFolders.filter((f) => f !== folder)
+                  )
+                }
               />
               &nbsp;{folder}
             </label>
@@ -125,7 +147,67 @@ export default function NewPost({
         </style>
       </div>
 
-      <button onClick={handleSubmit} disabled={summary.length > MAX_SUMMARY_LENGTH}>
+      <div style={{ marginBottom: "20px" }}>
+        <label>Post To:</label>
+        <div style={{ marginTop: "6px" }}>
+          <label>
+            <input
+              type="radio"
+              checked={visibility === "entire"}
+              onChange={() => setVisibility("entire")}
+            />
+            &nbsp;Entire Class
+          </label>
+          <br />
+          <label>
+            <input
+              type="radio"
+              checked={visibility === "custom"}
+              onChange={() => setVisibility("custom")}
+            />
+            &nbsp;Individual Students/Instructors
+          </label>
+        </div>
+
+        {visibility === "custom" && (
+          <div style={{ marginTop: "10px", paddingLeft: "16px" }}>
+            <strong>Instructors:</strong>
+            {instructorList.map(user => (
+              <div key={user._id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    name={`viewer-${user._id}`}
+                    checked={selectedViewers.includes(user._id)}
+                    onChange={() => toggleViewer(user._id)}
+                  />
+                  &nbsp;{user.firstName} {user.lastName}
+                </label>
+              </div>
+            ))}
+
+            <strong style={{ marginTop: "10px", display: "block" }}>Students & Others:</strong>
+            {otherUsers.map(user => (
+              <div key={user._id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    name={`viewer-${user._id}`}
+                    checked={selectedViewers.includes(user._id)}
+                    onChange={() => toggleViewer(user._id)}
+                  />
+                  &nbsp;{user.firstName} {user.lastName}
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <button
+        onClick={handleSubmit}
+        disabled={summary.length > MAX_SUMMARY_LENGTH}
+      >
         Post
       </button>
       <button onClick={onCancel} style={{ marginLeft: "10px" }}>

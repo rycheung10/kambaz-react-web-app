@@ -96,12 +96,13 @@ export default function QAS() {
                         }}
                         selectedFolder={selectedFolder}
                         onClearFilter={() => setSelectedFolder("all")}
+                        currentUser={currentUser}
                     />
                 )}
 
                 <div style={{ flex: 1 }}>
                     {showNewPost ? (
-                        <NewPost currentUser={currentUser} onPost={handleNewPost} onCancel={() => setShowNewPost(false)} availableFolders={folders} />
+                        <NewPost currentUser={currentUser} onPost={handleNewPost} onCancel={() => setShowNewPost(false)} availableFolders={folders} courseUsers={allUsers} />
                     ) : (
                         <PostScreen
                             post={selectedPost}

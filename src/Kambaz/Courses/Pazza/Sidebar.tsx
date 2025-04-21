@@ -10,6 +10,7 @@ export default function Sidebar({
     selectedFolder,
     selectedPost, // Pass from QAS.tsx
     onClearFilter,
+    currentUser, // Pass the currentUser to check visibility
 }: {
     onSelect: (post: any) => void;
     onNewPost: () => void;
@@ -17,6 +18,7 @@ export default function Sidebar({
     selectedFolder: string;
     selectedPost: any;
     onClearFilter: () => void;
+    currentUser: any; // currentUser to filter visibility
 }) {
     const dispatch = useDispatch();
     const [query, setQuery] = useState("");
@@ -28,13 +30,26 @@ export default function Sidebar({
         return temp.textContent || temp.innerText || "";
     };
 
+    // Filter posts based on visibility and search query
     const filtered = posts.filter(
-        (post) =>
-            (selectedFolder === "all" || post.folders?.includes(selectedFolder)) &&
-            (post.title.toLowerCase().includes(query.toLowerCase()) ||
-                post.body.toLowerCase().includes(query.toLowerCase()))
+        (post) => {
+            if (
+                (selectedFolder === "all" || post.folders?.includes(selectedFolder)) &&
+                (post.title.toLowerCase().includes(query.toLowerCase()) ||
+                    post.body.toLowerCase().includes(query.toLowerCase()))
+            ) {
+                // Check if the post is visible to the current user
+                if (post.visibility.includes("entire")) {
+                    return true; // Visible to everyone
+                } else if (post.visibility.includes(currentUser._id)) {
+                    return true; // Visible to selected viewers, including the current user
+                }
+            }
+            return false;
+        }
     );
 
+    // Group posts by date
     const groupPostsByDate = () => {
         const today = new Date();
         const groups: { [key: string]: any[] } = {
@@ -44,10 +59,9 @@ export default function Sidebar({
         };
 
         filtered.forEach((post) => {
-            const postDate = new Date(post.createdAt); // Ensure createdAt is a Date object
+            const postDate = new Date(post.createdAt);
             const dayDiff = Math.floor((today.getTime() - postDate.getTime()) / (1000 * 3600 * 24));
 
-            // Group posts based on date difference
             if (dayDiff === 0) {
                 groups.Today.push(post);
             } else if (dayDiff === 1) {
@@ -55,13 +69,11 @@ export default function Sidebar({
             } else if (dayDiff <= 7) {
                 groups["Last Week"].push(post);
             } else {
-                // Group posts by week (starting on Sunday)
                 const startOfWeek = new Date(postDate);
-                startOfWeek.setDate(postDate.getDate() - postDate.getDay()); // Set to the previous Sunday
+                startOfWeek.setDate(postDate.getDate() - postDate.getDay());
                 const endOfWeek = new Date(startOfWeek);
-                endOfWeek.setDate(startOfWeek.getDate() + 6); // Get Sunday of the same week
+                endOfWeek.setDate(startOfWeek.getDate() + 6);
 
-                // Format the week range as "MM/DD - MM/DD"
                 const formatDate = (date: Date) => {
                     return `${date.getMonth() + 1}/${date.getDate()}`;
                 };
@@ -101,8 +113,8 @@ export default function Sidebar({
                 onClick={onNewPost}
                 style={{
                     marginBottom: "12px",
-                    backgroundColor: "rgb(72, 113, 157)", 
-                    color: "white", 
+                    backgroundColor: "rgb(72, 113, 157)",
+                    color: "white",
                     border: "none",
                     padding: "8px 12px",
                     borderRadius: "6px",
@@ -184,7 +196,7 @@ export default function Sidebar({
                                     fontWeight: "bold",
                                     marginBottom: "8px",
                                 }}
-                                onClick={() => toggleCategory(category)} // Toggle category visibility
+                                onClick={() => toggleCategory(category)}
                             >
                                 {category}
                                 <span style={{ float: "right" }}>
@@ -193,7 +205,7 @@ export default function Sidebar({
                             </button>
                             <div
                                 style={{
-                                    display: collapsedCategories[category] ? "none" : "block", // Control visibility
+                                    display: collapsedCategories[category] ? "none" : "block",
                                     paddingLeft: "16px",
                                 }}
                             >
