@@ -39,6 +39,11 @@ export default function NewPost({
       return;
     }
 
+    // Ensure current user is always included in the visibility array
+    const visibilityList = visibility === "entire" 
+      ? ["entire"] 
+      : [...selectedViewers, currentUser._id];
+
     const fullName = `${currentUser?.firstName || ""} ${currentUser?.lastName || ""}`.trim().toLowerCase();
 
     const now = new Date();
@@ -61,7 +66,7 @@ export default function NewPost({
       folders: selectedFolders,
       course: cid,
       resolved: false,
-      visibility: visibility === "entire" ? "entire" : selectedViewers, // new field
+      visibility: visibilityList, // Now includes the current user automatically
     };
 
     onPost(newPost);
