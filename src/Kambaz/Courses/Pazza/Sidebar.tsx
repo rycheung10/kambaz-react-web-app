@@ -20,6 +20,7 @@ export default function Sidebar({
 }) {
     const dispatch = useDispatch();
     const [query, setQuery] = useState("");
+    const [collapsedCategories, setCollapsedCategories] = useState<{ [key: string]: boolean }>({});
 
     const stripHtml = (html: string) => {
         const temp = document.createElement("div");
@@ -33,6 +34,57 @@ export default function Sidebar({
             (post.title.toLowerCase().includes(query.toLowerCase()) ||
                 post.body.toLowerCase().includes(query.toLowerCase()))
     );
+
+    const groupPostsByDate = () => {
+        const today = new Date();
+        const groups: { [key: string]: any[] } = {
+            Today: [],
+            Yesterday: [],
+            "Last Week": [],
+        };
+
+        filtered.forEach((post) => {
+            const postDate = new Date(post.createdAt); // Ensure createdAt is a Date object
+            const dayDiff = Math.floor((today.getTime() - postDate.getTime()) / (1000 * 3600 * 24));
+
+            // Group posts based on date difference
+            if (dayDiff === 0) {
+                groups.Today.push(post);
+            } else if (dayDiff === 1) {
+                groups.Yesterday.push(post);
+            } else if (dayDiff <= 7) {
+                groups["Last Week"].push(post);
+            } else {
+                // Group posts by week (starting on Sunday)
+                const startOfWeek = new Date(postDate);
+                startOfWeek.setDate(postDate.getDate() - postDate.getDay()); // Set to the previous Sunday
+                const endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 6); // Get Sunday of the same week
+
+                // Format the week range as "MM/DD - MM/DD"
+                const formatDate = (date: Date) => {
+                    return `${date.getMonth() + 1}/${date.getDate()}`;
+                };
+
+                const weekRange = `${formatDate(startOfWeek)} - ${formatDate(endOfWeek)}`;
+                if (!groups[weekRange]) {
+                    groups[weekRange] = [];
+                }
+                groups[weekRange].push(post);
+            }
+        });
+
+        return groups;
+    };
+
+    const groupedPosts = groupPostsByDate();
+
+    const toggleCategory = (category: string) => {
+        setCollapsedCategories((prev) => ({
+            ...prev,
+            [category]: !prev[category],
+        }));
+    };
 
     return (
         <div
@@ -115,48 +167,82 @@ export default function Sidebar({
             />
 
             <div>
-                {filtered.map((post) => {
-                    const isSelected = selectedPost?._id === post._id;
+                {Object.keys(groupedPosts).map((category) => {
+                    const postsInCategory = groupedPosts[category];
+
                     return (
-                        <div
-                            key={post._id}
-                            style={{
-                                marginBottom: "16px",
-                                cursor: "pointer",
-                                backgroundColor: isSelected ? "#e6f0ff" : "transparent",
-                                borderLeft: isSelected ? "4px solid #007bff" : "none",
-                                paddingLeft: isSelected ? "8px" : "0px",
-                                borderRadius: "6px",
-                                padding: "8px",
-                                transition: "background-color 0.2s",
-                            }}
-                            onClick={() => {
-                                onSelect(post);
-                                markPostAsRead(post._id).then(() => {
-                                    profile().then((updatedUser) => {
-                                        dispatch(setCurrentUser(updatedUser));
-                                    });
-                                });
-                            }}
-                        >
-                            <strong>{post.title}</strong>
-                            <p style={{ margin: 0, fontSize: "0.9em" }}>
-                                {stripHtml(post.body).slice(0, 60)}...
-                            </p>
-                            <div style={{ fontSize: "0.8em", color: "#555" }}>
-                                {post.role} - {post.author} | {post.createdAt}
+                        <div key={category}>
+                            <button
+                                style={{
+                                    display: "block",
+                                    width: "100%",
+                                    textAlign: "left",
+                                    backgroundColor: "#f1f1f1",
+                                    padding: "8px",
+                                    border: "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    fontWeight: "bold",
+                                    marginBottom: "8px",
+                                }}
+                                onClick={() => toggleCategory(category)} // Toggle category visibility
+                            >
+                                {category}
+                                <span style={{ float: "right" }}>
+                                    {collapsedCategories[category] ? "▲" : "▼"}
+                                </span>
+                            </button>
+                            <div
+                                style={{
+                                    display: collapsedCategories[category] ? "none" : "block", // Control visibility
+                                    paddingLeft: "16px",
+                                }}
+                            >
+                                {postsInCategory.map((post) => {
+                                    const isSelected = selectedPost?._id === post._id;
+                                    return (
+                                        <div
+                                            key={post._id}
+                                            style={{
+                                                marginBottom: "16px",
+                                                cursor: "pointer",
+                                                backgroundColor: isSelected ? "#e6f0ff" : "transparent",
+                                                borderLeft: isSelected ? "4px solid #007bff" : "none",
+                                                paddingLeft: isSelected ? "8px" : "0px",
+                                                borderRadius: "6px",
+                                                padding: "8px",
+                                                transition: "background-color 0.2s",
+                                            }}
+                                            onClick={() => {
+                                                onSelect(post);
+                                                markPostAsRead(post._id).then(() => {
+                                                    profile().then((updatedUser) => {
+                                                        dispatch(setCurrentUser(updatedUser));
+                                                    });
+                                                });
+                                            }}
+                                        >
+                                            <strong>{post.title}</strong>
+                                            <p style={{ margin: 0, fontSize: "0.9em" }}>
+                                                {stripHtml(post.body).slice(0, 60)}...
+                                            </p>
+                                            <div style={{ fontSize: "0.8em", color: "#555" }}>
+                                                {post.role} - {post.author} | {post.createdAt}
+                                            </div>
+                                            {post.folders && post.folders.length > 0 && (
+                                                <div
+                                                    style={{
+                                                        fontSize: "0.75em",
+                                                        color: "#007bff",
+                                                        marginTop: "4px",
+                                                    }}
+                                                >
+                                                    📁 {post.folders.join(", ")}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
-                            {post.folders && post.folders.length > 0 && (
-                                <div
-                                    style={{
-                                        fontSize: "0.75em",
-                                        color: "#007bff",
-                                        marginTop: "4px",
-                                    }}
-                                >
-                                    📁 {post.folders.join(", ")}
-                                </div>
-                            )}
                         </div>
                     );
                 })}
