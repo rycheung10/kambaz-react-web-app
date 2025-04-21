@@ -19,11 +19,12 @@ export default function NewPost({
   const [summary, setSummary] = useState("");
   const [details, setDetails] = useState("");
   const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
+  const MAX_SUMMARY_LENGTH = 100;
 
   const handleSubmit = () => {
     const plainText = details.replace(/<[^>]+>/g, '').trim();
-    if (!summary.trim() || plainText === "") {
-      alert("Summary and details are required.");
+    if (!summary.trim() || summary.length > MAX_SUMMARY_LENGTH || plainText === "") {
+      alert("Summary (max 100 characters) and details are required.");
       return;
     }
     const fullName = `${currentUser?.firstName || ""} ${currentUser?.lastName || ""}`.trim().toLowerCase();
@@ -95,8 +96,13 @@ export default function NewPost({
           value={summary}
           onChange={(e) => setSummary(e.target.value)}
           placeholder="Short title"
+          maxLength={MAX_SUMMARY_LENGTH + 1}
           style={{ width: "100%", padding: "8px" }}
         />
+        <div style={{ fontSize: "0.85em", color: summary.length > MAX_SUMMARY_LENGTH ? "red" : "#666" }}>
+          {summary.length}/{MAX_SUMMARY_LENGTH} characters
+          {summary.length > MAX_SUMMARY_LENGTH && " – Too long!"}
+        </div>
       </div>
 
       <div style={{ marginBottom: "12px" }}>
@@ -119,7 +125,9 @@ export default function NewPost({
         </style>
       </div>
 
-      <button onClick={handleSubmit}>Post</button>
+      <button onClick={handleSubmit} disabled={summary.length > MAX_SUMMARY_LENGTH}>
+        Post
+      </button>
       <button onClick={onCancel} style={{ marginLeft: "10px" }}>
         Cancel
       </button>
